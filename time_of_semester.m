@@ -244,3 +244,4 @@ cor_p_sorted(2:m)=max([cor_p_sorted(1:m-1); cor_p_sorted(2:m)]); %Bonferroni-Hol
 corrected_p=cor_p_sorted(unsort_ids);
 corrected_p=reshape(corrected_p,s);
 h=corrected_p<alpha;
+end
