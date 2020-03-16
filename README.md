@@ -1,7 +1,7 @@
 # time-of-semester
 Data and code for the paper "On the psychology of the psychology subject pool: an exploratory test of the good student effect"
 
-Raw data for 4 main experiments used in this paper. These are the raw data before doing any clening:
+Raw data (before doing any cleaning and scoring) for 4 main experiments used in this paper:
 
 Experiment_017_Raw_Data.csv
 
