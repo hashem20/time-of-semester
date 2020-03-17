@@ -6,7 +6,16 @@ clear all;
 [A, title, ~] = xlsread ('time_of_semester.xlsx');%105 item
 l = size(title);
 l = l(1,2);
-title = title (1,6:l);
+title = strrep(title (1,6:l),'_',' ');
+title = strrep(title,'-11','');
+title(18:51) = lower(title(18:51));
+title = regexprep(title,'(\<[a-z])','${upper($1)}');
+title = strrep(title,'Epistemic Curiosity','');
+title = strrep(title,'Dispositional Positive Emotions','DPE');
+title = strrep(title,'Arnett','');
+title = strrep(title,'Revised','');
+title = strrep(title,'Santa Barbara','');
+title = strrep(title,'Today','Discounting');
 %% date
 for i=5:l-1
     [R,P] = corrcoef (A(:,2), A(:,i), 'rows', 'complete');
@@ -128,6 +137,89 @@ for i=1:l-5
         end
     end
 end
+%% correlation between Grit and Consciousness
+[r,p]=corrcoef(A(:,56),A(:,105), 'row', 'complete')
+
+%% descriptive stats
+for i=1:length(title)
+    table(i).trait = title{1,i};
+    table(i).Min = nanmin(A(:,i+4));
+    table(i).Max = nanmax(A(:,i+4));
+    table(i).Mean = nanmean(A(:,i+4));
+    table(i).SD = nanstd(A(:,i+4));
+    table(i).N = sum(~isnan(A(:,i+4)));
+end
+%% Arizona color palette
+AZred = [171,5,32]/256;
+AZblue = [12,35,75]/256;
+AZcactus = [92, 135, 39]/256;
+AZsky = [132, 210, 226]/256;
+AZriver = [7, 104, 115]/256;
+AZsand = [241, 158, 31]/256;
+AZmesa = [183, 85, 39]/256;
+AZbrick = [74, 48, 39]/256;
+%%
+for i=1:20
+    figure(1);
+    subplot(5, 4, i)
+    histogram(A(:,i+4), 'Facecolor', AZsand);
+    set(gca,'fontsize',15);
+    xlabel(title{1,i}, 'FontSize', 15);
+end
+subplot(5, 4, 1)
+xticklabels({'M', 'F', 'Trans'});
+
+subplot(5, 4, 3)
+xticks([1 2 3 4 5 6 7 8]);
+xticklabels({'A', 'B', 'L', 'N', 'W', 'M','I', 'O'});
+
+subplot(5, 4, 4)
+xticks([0 1]);
+xticklabels({'No', 'Yes'});
+%%
+for i=21:40
+    figure(2);
+    subplot(5, 4, i-20)
+    histogram(A(:,i+4), 'Facecolor', AZsand);
+    set(gca,'fontsize',15);
+    xlabel(title{1,i}, 'FontSize', 15);
+end
+%%
+for i=41:60
+    figure(3);
+    subplot(5, 4, i-40)
+    histogram(A(:,i+4), 'Facecolor', AZsand);
+    set(gca,'fontsize',15);
+    if (i-40 == 13) | (i-40 == 14) | (i-40 == 19) | (i-40 == 20)
+        xlabel(title{1,i}, 'FontSize', 10);
+    else
+        xlabel(title{1,i}, 'FontSize', 15);
+    end
+end
+%%
+for i=61:80
+    figure(4);
+    subplot(5, 4, i-60)
+    histogram(A(:,i+4), 'Facecolor', AZsand);
+    set(gca,'fontsize',15);
+    if 2<(i-60) & (i-60)<8
+        xlabel(title{1,i}, 'FontSize', 11);
+    else
+        xlabel(title{1,i}, 'FontSize', 15);
+    end
+end
+%%
+for i=81:105
+    figure(5);
+    subplot(5, 5, i-80)
+    histogram(A(:,i+4), 'Facecolor', AZsand);
+    set(gca,'fontsize',15);
+    if (i-80) == 8 | (i-80) == 7
+        xlabel(title{1,i}, 'FontSize', 9);
+    else
+        xlabel(title{1,i}, 'FontSize', 13);
+    end
+end
 %%
 % Bonferroni-Holm (1979) correction for multiple comparisons.  This is a
 % sequentially rejective version of the simple Bonferroni correction for multiple
@@ -204,8 +296,8 @@ end
 % Dept. of Cognitive Science
 % University of California, San Diego
 % March 24, 2010
-
-
+% 
+% 
 function [corrected_p, h]=bonf_holm(pvalues,alpha)
 
 if nargin<1,
